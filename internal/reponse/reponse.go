@@ -1,0 +1,26 @@
+package reponse
+
+import "github.com/gin-gonic/gin"
+
+type Body struct {
+	Code    int         `json:"code"`
+	Message string      `json:"message"`
+	Data    interface{} `json:"data"` //这个？为什么要写接口类型？
+}
+
+func Success(c *gin.Context, data interface{}) {
+	c.JSON(200, Body{
+		Code:    200,
+		Message: "success",
+		Data:    data,
+	})
+
+}
+
+func Fail(c *gin.Context, httpStatus int, code int, data interface{}) {
+	c.JSON(httpStatus, Body{
+		Message: "fail",
+		Data:    data,
+		Code:    code,
+	})
+}
