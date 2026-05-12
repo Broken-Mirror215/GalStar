@@ -1,9 +1,12 @@
 package api
 
 import (
+	"Gal-Finder/internal/middleware"
 	"Gal-Finder/internal/response"
+	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt/v5"
 )
 
 type AuthApi struct{}
@@ -29,11 +32,48 @@ func (a *AuthApi) Login(c *gin.Context) {
 		response.Fail(c, 401, 401, err.Error())
 		return
 	}
+
+	UserID := uint(1)
+	claims := middleware.Claims{
+		UserID: UserID,
+		RegisteredClaims: jwt.RegisteredClaims{
+			//这是什么
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(24 * time.Hour)),
+			IssuedAt:  jwt.NewNumericDate(time.Now()),
+		},
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	tokenString, err := token.SignedString([]byte("change-this-sercet"))
+	if err != nil {
+		response.Fail(c, 500, 500, err.Error())
+		return
+	}
+	response.Success(c, gin.H{
+		"token": tokenString,
+		"user": gin.H{
+			"userID":   UserID,
+			"password": req.Password,
+		},
+	})
 }
+
 func (a *AuthApi) Register(c *gin.Context) {
 	var req Register
 	if err := c.ShouldBindJSON(&req); err != nil {
 		response.Fail(c, 401, 401, err.Error())
 		return
 	}
+
+	response.Success(c, gin.H{
+		"username": req.Username,
+		"password": req.Password,
+		"nickname": req.Nickname,
+	})
+}
+
+func (a *AuthApi) Profile(c *gin.Context) {
+	userId, _ := c.Get("userID")
+	response.Success(c, gin.H{
+		"userID": userId,
+	})
 }
