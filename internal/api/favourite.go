@@ -46,7 +46,7 @@ func (a *FavouriteApi) List(c *gin.Context) {
 
 func (a *FavouriteApi) Delete(c *gin.Context) {
 	userID, _ := c.Get("userID")
-	vndbID, _ := c.Param("vndb_id")
+	vndbID := c.Param("vndb_id")
 
 	response.Success(c, gin.H{
 		"userID": userID,

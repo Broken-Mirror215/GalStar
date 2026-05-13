@@ -33,6 +33,8 @@ func (a *AuthApi) Login(c *gin.Context) {
 		return
 	}
 
+	//在登录的时候生成一个token
+	//一般一个token带有签发时间，过期时间，签发者
 	UserID := uint(1)
 	claims := middleware.Claims{
 		UserID: UserID,
@@ -42,8 +44,8 @@ func (a *AuthApi) Login(c *gin.Context) {
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
 		},
 	}
+	//用密钥把claims签名，变成token字符串
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	//这里是过中间件JWT认证
 	tokenString, err := token.SignedString([]byte("change-this-secret"))
 	if err != nil {
 		response.Fail(c, 500, 500, err.Error())

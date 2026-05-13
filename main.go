@@ -12,7 +12,8 @@ import (
 
 func main() {
 	router := gin.New()
-
+	
+	//下面都是中间件
 	router.Use(gin.Recovery())
 	router.Use(middleware.RequestID())
 	router.Use(gin.Logger())
@@ -21,16 +22,17 @@ func main() {
 		AllowHeaders:     []string{"Origin", "Content-Length", "Content-Type", "Authorization"},
 		AllowCredentials: true,
 		MaxAge:           12 * time.Hour,
-		AllowOrigins:     []string{"http://localhost:8080"},
+		AllowOrigins:     []string{"http://localhost:5173"}, //允许前端哪个端口来访问我
 		ExposeHeaders:    []string{"X-Request-ID"},
 	}))
+
 	authapi := api.NewAuthApi()
 	favouriteapi := api.NewFavouriteApi()
 	vndbapi := api.NewVNDBApi()
 	public := router.Group("/api")
 	{
-		public.POST("/auth/Register", authapi.Register)
-		public.POST("/auth/Login", authapi.Login)
+		public.POST("/auth/register", authapi.Register)
+		public.POST("/auth/login", authapi.Login)
 	}
 
 	//详情看Gin的路由分组
