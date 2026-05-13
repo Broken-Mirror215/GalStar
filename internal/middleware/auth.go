@@ -27,7 +27,10 @@ func JWTAuth() gin.HandlerFunc {
 		parts := strings.SplitN(authHeader, " ", 2)
 		if len(parts) != 2 || parts[0] != "Bearer" {
 			response.Fail(c, 400, 401, "token format error")
+			c.Abort()
+			return
 		}
+		
 		token, err := jwt.ParseWithClaims(parts[1], &Claims{}, func(token *jwt.Token) (interface{}, error) {
 			return jwtSecret, nil
 		})

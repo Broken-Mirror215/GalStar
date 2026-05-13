@@ -43,7 +43,8 @@ func (a *AuthApi) Login(c *gin.Context) {
 		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenString, err := token.SignedString([]byte("change-this-sercet"))
+	//这里是过中间件JWT认证
+	tokenString, err := token.SignedString([]byte("change-this-secret"))
 	if err != nil {
 		response.Fail(c, 500, 500, err.Error())
 		return
@@ -51,8 +52,7 @@ func (a *AuthApi) Login(c *gin.Context) {
 	response.Success(c, gin.H{
 		"token": tokenString,
 		"user": gin.H{
-			"userID":   UserID,
-			"password": req.Password,
+			"userID": UserID,
 		},
 	})
 }
@@ -66,7 +66,6 @@ func (a *AuthApi) Register(c *gin.Context) {
 
 	response.Success(c, gin.H{
 		"username": req.Username,
-		"password": req.Password,
 		"nickname": req.Nickname,
 	})
 }

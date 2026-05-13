@@ -10,7 +10,7 @@ type Body struct {
 
 func Success(c *gin.Context, data interface{}) {
 	c.JSON(200, Body{
-		Code:    200,
+		Code:    0, //这个是业务成功了
 		Message: "success",
 		Data:    data,
 	})

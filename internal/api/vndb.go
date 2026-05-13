@@ -26,11 +26,11 @@ func (a *VNDBapi) Search(c *gin.Context) {
 
 	//这个body的设计是根据vndb介绍的哪个接口去设计的？
 	body := map[string]interface{}{
-		"filter":   []interface{}{"search", "=", keyword},
-		"fields":   "title,alttitle,released,rating,image{url,thumbnail,sexual,violence}",
-		"sort":     "searchrank",
-		"rescults": 20,
-		"page":     page,
+		"filters": []interface{}{"search", "=", keyword},
+		"fields":  "title,alttitle,released,rating,image{url,thumbnail,sexual,violence}",
+		"sort":    "searchrank",
+		"results": 20,
+		"page":    page,
 	}
 
 	//这个是什么？

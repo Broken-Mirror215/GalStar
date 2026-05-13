@@ -12,7 +12,7 @@ func RequestID() gin.HandlerFunc {
 		requestID := c.GetHeader("X-Request-ID")
 		//_ = requestID
 		if requestID == "" {
-			fmt.Sprintf("%d", time.Now().UnixNano())
+			requestID = fmt.Sprintf("%d", time.Now().UnixNano())
 		}
 
 		c.Set("requestID", requestID)
