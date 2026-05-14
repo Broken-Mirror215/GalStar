@@ -23,8 +23,8 @@ func Ratelimit(limit int, window time.Duration) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		key := c.ClientIP()
 
-		if UserID, ok := c.Get("user_id").(string); ok {
-			fmt.Printf("user %d", UserID)
+		if UserID, ok := c.Get("userID"); ok {
+			key = fmt.Sprintf("user %v", UserID)
 		}
 
 		now := time.Now()
@@ -43,7 +43,7 @@ func Ratelimit(limit int, window time.Duration) gin.HandlerFunc {
 
 		if v.Count >= limit {
 			mu.Unlock()
-			response.Fail(c, 401, 401, "too many requests")
+			response.Fail(c, 429, 429, "too many requests")
 			c.Abort()
 			return
 		}

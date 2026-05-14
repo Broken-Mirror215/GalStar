@@ -12,11 +12,11 @@ import (
 
 func main() {
 	router := gin.New()
-	
+
 	//下面都是中间件
 	router.Use(gin.Recovery())
 	router.Use(middleware.RequestID())
-	router.Use(gin.Logger())
+	router.Use(middleware.Logger())
 	router.Use(cors.New(cors.Config{
 		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD"},
 		AllowHeaders:     []string{"Origin", "Content-Length", "Content-Type", "Authorization"},
@@ -40,7 +40,8 @@ func main() {
 	private.Use(middleware.JWTAuth())
 	{
 		private.GET("/user/profile", authapi.Profile)
-		private.GET("/v1/vndb/search", vndbapi.Search)
+		//只给搜索接口挂限流
+		private.GET("/v1/vndb/search", middleware.Ratelimit(10, time.Minute), vndbapi.Search)
 
 		//这个是URL吗，怎么看着这么怪？
 		private.POST("/v1/favourite", favouriteapi.Create)
