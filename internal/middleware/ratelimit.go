@@ -24,7 +24,7 @@ func Ratelimit(limit int, window time.Duration) gin.HandlerFunc {
 		key := c.ClientIP()
 
 		if UserID, ok := c.Get("userID"); ok {
-			key = fmt.Sprintf("user %v", UserID)
+			key = fmt.Sprintf("user:%v", UserID)
 		}
 
 		now := time.Now()

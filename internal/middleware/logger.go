@@ -20,7 +20,7 @@ func Logger() gin.HandlerFunc {
 		ClientIp := c.ClientIP()
 
 		Requestid, _ := c.Get("requestID")
-		user, _ := c.Get("user")
+		user, _ := c.Get("userID")
 
 		fmt.Printf("status=%d\n method=%s\n path=%s\n ip=%s\n requestid=%v\n user=%v \nlatency=%s", status, method, path, ClientIp, Requestid, user, latency)
 	}

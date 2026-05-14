@@ -18,7 +18,7 @@ func NewVNDBApi() *VNDBapi {
 }
 
 type VNDBresponse struct {
-	Results []VNDBitem `json:"results"`
+	Results []VNDBItem `json:"results"`
 	More    bool       `json:"more"`
 }
 
@@ -36,7 +36,7 @@ type VNDBImage struct {
 	URL       string  `json:"url"`
 	Thumbnail string  `json:"thumbnail"`
 	Sexual    float64 `json:"sexual"`
-	Violence  float64 `json:" violence"`
+	Violence  float64 `json:"violence"`
 }
 
 func (a *VNDBapi) Search(c *gin.Context) {
@@ -99,7 +99,7 @@ func (a *VNDBapi) Search(c *gin.Context) {
 	}
 
 	response.Success(c, gin.H{
-		"list":    result.Rescults,
+		"list":    result.Results,
 		"page":    page,
 		"hasMore": result.More,
 	})

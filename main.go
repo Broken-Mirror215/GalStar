@@ -2,6 +2,7 @@ package main
 
 import (
 	"Gal-Finder/internal/api"
+	"Gal-Finder/internal/initialize"
 	"time"
 
 	"Gal-Finder/internal/middleware"
@@ -12,7 +13,7 @@ import (
 
 func main() {
 	router := gin.New()
-
+	initialize.InitMysql()
 	//下面都是中间件
 	router.Use(gin.Recovery())
 	router.Use(middleware.RequestID())
