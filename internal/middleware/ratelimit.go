@@ -34,7 +34,7 @@ func Ratelimit(limit int, window time.Duration) gin.HandlerFunc {
 		if !ok || now.After(v.ResetTime) {
 			visitors[key] = &visitor{
 				Count:     1,
-				ResetTime: now.Add(window), //这是什么？？
+				ResetTime: now.Add(window), //这是记录一个未来的时间点，
 			}
 			mu.Unlock()
 			c.Next()

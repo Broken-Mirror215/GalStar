@@ -8,7 +8,7 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-var jwtSecret = []byte("change-this-secret")
+var jwtSecret = []byte("change-this-secret") //密钥
 
 type Claims struct {
 	UserID uint `json:"userid"`
@@ -19,7 +19,7 @@ func JWTAuth() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authHeader := c.GetHeader("Authorization")
 		if authHeader == "" {
-			response.Fail(c, 401, 401, "missing token")
+			response.Fail(c, 400, 400, "missing token")
 			c.Abort()
 			return
 		}
@@ -45,7 +45,8 @@ func JWTAuth() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
-		c.Set("userID", claims.UserID)
+
+		c.Set("userID", claims.UserID) //只是放进了这次的http请求。
 		c.Next()
 	}
 }

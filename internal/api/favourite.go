@@ -12,7 +12,7 @@ func NewFavouriteApi() *FavouriteApi {
 	return &FavouriteApi{}
 }
 
-// 这些类型要按照vndb的要求来写吗
+// 自己定义的后端接口喵
 type CreateFavouriteRequest struct {
 	VNDBID       string `json:"VNDBID" binding:"required"`
 	Title        string `json:"Title" binding:"required"`

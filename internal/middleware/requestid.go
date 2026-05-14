@@ -9,8 +9,7 @@ import (
 
 func RequestID() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		requestID := c.GetHeader("X-Request-ID")
-		//_ = requestID
+		requestID := c.GetHeader("X-Request-ID") //第X个请求
 		if requestID == "" {
 			requestID = fmt.Sprintf("%d", time.Now().UnixNano())
 		}

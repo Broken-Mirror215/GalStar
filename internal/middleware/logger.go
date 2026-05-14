@@ -14,9 +14,9 @@ func Logger() gin.HandlerFunc {
 		//这里直接next的原因是要等后面的弄完，所以logger是一种前后包裹的中间件
 		c.Next()
 		latency := time.Since(start)
-		status := c.Writer.Status()
+		status := c.Writer.Status() //c.writer是gin用来写响应的对象
 		method := c.Request.Method
-		path := c.Request.URL.Path
+		path := c.Request.URL.Path //这个是请求路径
 		ClientIp := c.ClientIP()
 
 		Requestid, _ := c.Get("requestID")

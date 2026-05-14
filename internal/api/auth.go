@@ -1,12 +1,15 @@
 package api
 
 import (
+	"Gal-Finder/internal/global"
 	"Gal-Finder/internal/middleware"
+	"Gal-Finder/internal/model"
 	"Gal-Finder/internal/response"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type AuthApi struct{}
@@ -28,18 +31,30 @@ type Login struct {
 
 func (a *AuthApi) Login(c *gin.Context) {
 	var req Login
+	//把前端登录送来的数据放进去
 	if err := c.ShouldBindJSON(&req); err != nil {
 		response.Fail(c, 401, 401, err.Error())
 		return
 	}
 
+	var user model.User
+	if err := global.DB.Where("username = ?", req.Username).First(&user).Error; err != nil {
+		response.Fail(c, 401, 401, "invalid username or password")
+		return
+	}
+
+	if err := bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(req.Password)); err != nil {
+		response.Fail(c, 401, 401, "invalid username or password")
+		return
+	}
+
+	UserID := user.ID
 	//在登录的时候生成一个token
 	//一般一个token带有签发时间，过期时间，签发者
-	UserID := uint(1)
+	//这就是定义中间件
 	claims := middleware.Claims{
 		UserID: UserID,
 		RegisteredClaims: jwt.RegisteredClaims{
-			//这是什么
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(24 * time.Hour)),
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
 		},
@@ -62,13 +77,31 @@ func (a *AuthApi) Login(c *gin.Context) {
 func (a *AuthApi) Register(c *gin.Context) {
 	var req Register
 	if err := c.ShouldBindJSON(&req); err != nil {
-		response.Fail(c, 401, 401, err.Error())
+		response.Fail(c, 400, 400, err.Error())
+		return
+	}
+
+	hash, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
+	if err != nil {
+		response.Fail(c, 500, 500, "hash password failed")
+		return
+	}
+
+	user := model.User{
+		Username:     req.Username,
+		Nickname:     req.Nickname,
+		PasswordHash: string(hash),
+	}
+
+	if err := global.DB.Create(&user).Error; err != nil {
+		response.Fail(c, 500, 500, "the user name already exists")
 		return
 	}
 
 	response.Success(c, gin.H{
-		"username": req.Username,
-		"nickname": req.Nickname,
+		"userID":   user.ID, //哪里出现的？
+		"username": user.Username,
+		"nickname": user.Nickname,
 	})
 }
 

@@ -60,7 +60,7 @@ func (a *VNDBapi) Search(c *gin.Context) {
 		"page":    page,
 	}
 
-	//这个是什么？
+	//这个是把body变成Json类型的
 	raw, err := json.Marshal(body)
 	if err != nil {
 		response.Fail(c, 500, 500, "json marshal error")
@@ -72,14 +72,14 @@ func (a *VNDBapi) Search(c *gin.Context) {
 	}
 
 	//这个函数的第三个参数又在干什么
-
+	//感觉像是在调用vndb的api去查询
 	req, err := http.NewRequest("POST", "https://api.vndb.org/kana/vn", bytes.NewReader(raw))
 	if err != nil {
 		response.Fail(c, 500, 500, "create vndb request error")
 		return
 	}
 
-	//这个又是什么？？
+	//这个是发给VNDB的请求头，但是数据得查
 	req.Header.Set("Content-Type", "application/json")
 	resp, err := client.Do(req)
 	if err != nil {
