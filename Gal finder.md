@@ -648,7 +648,7 @@ model/response/vndb.go
 3.有收藏功能，可以管理。
 
 
-### to dolist
+## to dolist
 
 - 当前状态：阶段 1 和阶段 2 的 Gin 后端骨架已经基本完成，包括路由分组、统一响应、RequestID、JWTAuth、RateLimit、自定义 Logger、VNDB 搜索接口，以及 MySQL/GORM 初始化。
 - 当前暂停点：先不要继续堆新功能，需要先把项目结构重新理清，避免只是在复制代码。

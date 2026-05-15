@@ -45,9 +45,9 @@ func main() {
 		private.GET("/v1/vndb/search", middleware.Ratelimit(10, time.Minute), vndbapi.Search)
 
 		//这个是URL吗，怎么看着这么怪？
-		private.POST("/v1/favourite", favouriteapi.Create)
-		private.GET("/v1/favourite", favouriteapi.List)
-		private.DELETE("/v1/favourite/:vndb_id", favouriteapi.Delete)
+		private.POST("/favourites", favouriteapi.Create)
+		private.GET("/favourites", favouriteapi.List)
+		private.DELETE("/favourites/:vndb_id", favouriteapi.Delete)
 	}
 	router.Run("127.0.0.1:8080")
 }

@@ -8,7 +8,7 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-var jwtSecret = []byte("change-this-secret") //密钥
+var JwtSecret = []byte("change-this-secret") //密钥
 
 type Claims struct {
 	UserID uint `json:"userid"`
@@ -19,29 +19,29 @@ func JWTAuth() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authHeader := c.GetHeader("Authorization")
 		if authHeader == "" {
-			response.Fail(c, 400, 400, "missing token")
+			response.Fail(c, 401, 401, "missing token")
 			c.Abort()
 			return
 		}
 
 		parts := strings.SplitN(authHeader, " ", 2)
 		if len(parts) != 2 || parts[0] != "Bearer" {
-			response.Fail(c, 400, 401, "token format error")
+			response.Fail(c, 401, 401, "token format error")
 			c.Abort()
 			return
 		}
 
 		token, err := jwt.ParseWithClaims(parts[1], &Claims{}, func(token *jwt.Token) (interface{}, error) {
-			return jwtSecret, nil
+			return JwtSecret, nil
 		})
 		if err != nil || !token.Valid {
-			response.Fail(c, 400, 401, "invalid token")
+			response.Fail(c, 401, 401, "invalid token")
 			c.Abort()
 			return
 		}
 		claims, ok := token.Claims.(*Claims)
 		if !ok {
-			response.Fail(c, 400, 401, "invalid token")
+			response.Fail(c, 401, 401, "invalid token")
 			c.Abort()
 			return
 		}

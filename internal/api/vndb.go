@@ -28,7 +28,7 @@ type VNDBItem struct {
 	//防止不存在的字段用指针
 	AltTitle *string    `json:"alttitle"`
 	Released *string    `json:"released"`
-	Rating   *int       `json:"rating"`
+	Rating   *float64   `json:"rating"`
 	Image    *VNDBImage `json:"image"`
 }
 

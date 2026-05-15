@@ -61,7 +61,7 @@ func (a *AuthApi) Login(c *gin.Context) {
 	}
 	//用密钥把claims签名，变成token字符串
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenString, err := token.SignedString([]byte("change-this-secret"))
+	tokenString, err := token.SignedString(middleware.JwtSecret)
 	if err != nil {
 		response.Fail(c, 500, 500, err.Error())
 		return
@@ -69,7 +69,9 @@ func (a *AuthApi) Login(c *gin.Context) {
 	response.Success(c, gin.H{
 		"token": tokenString,
 		"user": gin.H{
-			"userID": UserID,
+			"userID":   UserID,
+			"username": user.Username,
+			"nickname": user.Nickname,
 		},
 	})
 }
