@@ -1,4 +1,4 @@
-package Service
+package service
 
 import (
 	"Gal-Finder/internal/global"
@@ -77,4 +77,27 @@ func (a *AuthService) Login(req LoginRequest) (loginResult LoginResult, err erro
 		Nickname: user.Nickname,
 		Username: user.Username,
 	}}, nil
+}
+
+func (a *AuthService) Register(req RegisterRequest) (User UserInfo, err error) {
+	hash, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
+	if err != nil {
+		return UserInfo{}, err
+	}
+
+	user := model.User{
+		Username:     req.Username,
+		Nickname:     req.Nickname,
+		PasswordHash: string(hash),
+	}
+
+	if err := global.DB.Create(&user).Error; err != nil {
+		return UserInfo{}, err
+	}
+
+	return UserInfo{
+		Username: user.Username,
+		Nickname: user.Nickname,
+		UserID:   user.ID,
+	}, nil
 }
